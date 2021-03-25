@@ -67,10 +67,7 @@ exports.getJob = catchAsyncError(async(req, res, next)=>{
     const job = await Job.find({$and: [{_id : req.params.id}, {slug: req.params.slug}]});
 
     if(!job || job.length === 0){
-        return res.status(404).json({
-            success: false,
-            message: 'Job not Found.'
-        });
+        return next(new ErrorHandler('Job not found.', 404));
     }
 
     res.status(200).json({
@@ -118,10 +115,7 @@ exports.jobStats = catchAsyncError(async (req, res, next)=>{
         ]);
 
         if(stats.length === 0){
-            return res.status(200 ).json({
-                success :  false,
-                message : `No Stats found for - ${req.params.topic}`
-            })
+            return next(new ErrorHandler(`No Stats found for - ${req.params.topic}`, 200));
         }
 
         res.status(200).json({
